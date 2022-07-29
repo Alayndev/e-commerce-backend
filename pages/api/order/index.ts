@@ -8,7 +8,7 @@ import {
   validateQuery,
 } from "lib/middlewares/schemasMiddlewares";
 
-// ! Yup: Definimos los schemas para validar query/body. Primero que nada validamos que query/body tengan los datos/campos requeridos con los tipos requeridos. De no ser así, cortamos el flujo
+// Yup: Definimos los schemas para validar query/body. Primero que nada validamos que query/body tengan los datos/campos requeridos con los tipos requeridos. De no ser así, cortamos el flujo
 let querySchema = yup.object().shape({
   productId: yup.string().required("productId required by query"), // El mensaje que se va a mostrar en errors
 });
