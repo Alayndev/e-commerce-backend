@@ -21,7 +21,7 @@ async function getOrder(req: NextApiRequest, res: NextApiResponse) {
       await myOrder.pullOrder(); 
 
       myOrder.data.status = "paid"; 
-      myOrder.data.gatewaysOrder = order.body; 
+      myOrder.data.gatewayOrder = order.body; 
       const now = new Date();
       myOrder.data.updatedAt = now; 
 

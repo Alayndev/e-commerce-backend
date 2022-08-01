@@ -19,7 +19,7 @@ const products = {
 export async function createOrder(
   userId: string,
   productId: string,
-  aditionalInfo
+  additionalInfo
 ): Promise<CreateOrderRes> {
   const product = products[productId]; // Simula buscar el producto en la coll products de Firestore
 
@@ -33,7 +33,7 @@ export async function createOrder(
   const now = new Date();
 
   const newOrderObj = {
-    aditionalInfo,
+    additionalInfo,
     productId,
     userId,
     createdAt: now,

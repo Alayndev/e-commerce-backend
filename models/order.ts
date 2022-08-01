@@ -4,7 +4,7 @@ const collection = firestore.collection("orders");
 
 // Min. 28 - Sería ideal tipar con este type createPreference() - data - y demás props. y methods tambien
 type OrderData = {
-  aditionalInfo: any;
+  additionalInfo: any;
   productId: string;
   userId: string;
   status: "pending" | "paid";

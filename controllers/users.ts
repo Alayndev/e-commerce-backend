@@ -7,3 +7,27 @@ export async function getUserById(id: string): Promise<any> {
 
   return userRef.data; // (MVC Desafio Modulo) Podemos devolver una instancia o la data directamente. Mejor la data.
 }
+
+export async function patchUserById(id: string, newData: any): Promise<any> {
+  const userRef = new User(id);
+
+  await userRef.pullUser();
+
+  userRef.data = newData;
+
+  await userRef.pushUser();
+
+  return userRef.data;
+}
+
+export async function patchUserAddressById(id: string, newAddress: any): Promise<any> {
+  const userRef = new User(id);
+
+  await userRef.pullUser();
+
+  userRef.data.address = newAddress;
+
+  await userRef.pushUser();
+
+  return userRef.data;
+}
