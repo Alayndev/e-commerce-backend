@@ -72,3 +72,9 @@ export async function createOrder(
 
   return { url: pref.body.init_point };
 }
+
+export async function getUserOrdersById(id: string): Promise<any> {
+  const userOrders = await Order.getUserOrders(id);
+
+  return userOrders;
+}

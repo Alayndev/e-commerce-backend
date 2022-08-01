@@ -14,6 +14,7 @@ async function getOrder(req: NextApiRequest, res: NextApiResponse) {
 
     const order = await getMerchantOrder(id);
 
+    // Todo: En controller
     if (order.body.order_status === "paid") {
       const orderId = order.body.external_reference;
 

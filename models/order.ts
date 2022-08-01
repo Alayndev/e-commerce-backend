@@ -41,6 +41,25 @@ class Order {
 
     return newOrder;
   }
+
+  static async getUserOrders(userId) {
+    const orders = await collection.where("userId", "==", userId).get();
+
+    const userOrders = [];
+
+    if (orders.empty) {
+      console.log("No matching documents.");
+      return;
+    }
+
+    orders.forEach((doc) => {
+      // console.log(doc.id, "=>", doc.data());
+
+      userOrders.push({ docId: doc.id, ...doc.data() });
+    });
+
+    return userOrders;
+  }
 }
 
 export { Order };
