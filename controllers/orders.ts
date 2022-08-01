@@ -78,3 +78,9 @@ export async function getUserOrdersById(id: string): Promise<any> {
 
   return userOrders;
 }
+
+export async function getOrderById(orderId: string): Promise<any> {
+  const orderData = await Order.getOrder(orderId);
+
+  return orderData;
+}

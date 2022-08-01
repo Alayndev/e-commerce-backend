@@ -55,6 +55,19 @@ class Order {
 
     return userOrders;
   }
+
+  static async getOrder(orderId) {
+    const order = await collection.doc(orderId).get();
+
+    if (order.exists) {
+      const orderData = order.data();
+
+      return orderData;
+    } else {
+      const message = `This orderId does not exist: ${orderId}`;
+      return message;
+    }
+  }
 }
 
 export { Order };
