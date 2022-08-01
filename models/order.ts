@@ -47,11 +47,6 @@ class Order {
 
     const userOrders = [];
 
-    if (orders.empty) {
-      console.log("No matching documents.");
-      return;
-    }
-
     orders.forEach((doc) => {
       // console.log(doc.id, "=>", doc.data());
 

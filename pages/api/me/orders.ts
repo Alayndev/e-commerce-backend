@@ -7,7 +7,7 @@ import { getUserOrdersById } from "controllers/orders";
 async function getHandler(req: NextApiRequest, res: NextApiResponse, userData) {
   const userOrders = await getUserOrdersById(userData.userId);
 
-  res.send(userOrders);
+  res.send({ userOrders });
 }
 
 const handler = methods({
