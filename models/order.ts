@@ -65,7 +65,7 @@ class Order {
       return orderData;
     } else {
       const message = `This orderId does not exist: ${orderId}`;
-      return message;
+      return { error: message };
     }
   }
 }

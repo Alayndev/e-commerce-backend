@@ -1,17 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { authMiddleware } from "lib/middlewares/authMiddleware";
 import methods from "micro-method-router";
-import { getOrderById } from "controllers/orders";
+import { getProductByID } from "controllers/products";
 
-// GET /order/{orderId}: Devuelve una orden con toda la data incluyendo el estado de la orden.
+// GET /products/{id}: Obtiene toda data de un producto.
 async function getHandler(req: NextApiRequest, res: NextApiResponse, userData) {
-  const { orderId }: any = req.query;
-  const orderData = await getOrderById(orderId);
+  const { productId }: any = req.query;
+  const productData = await getProductByID(productId);
 
-  if (orderData.error) {
-    res.status(400).send({ orderData });
+  if (productData.error) {
+    res.status(400).send({ productData });
   } else {
-    res.send({ orderData });
+    res.send({ productData });
   }
 }
 
