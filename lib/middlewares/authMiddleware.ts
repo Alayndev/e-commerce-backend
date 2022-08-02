@@ -7,15 +7,15 @@ export function authMiddleware(callback) {
     const token = parseBearerToken(req);
     if (!token) {
       res.status(401).json({ message: "missing token" });
-    }
-
-    const decodedToken = decodeToken(token);
-
-    if (decodedToken) {
-      callback(req, res, decodedToken);
     } else {
-      console.error("Error authMiddleare - decodedToken invalid");
-      res.status(401).json({ message: "token invalid" });
+      const decodedToken = decodeToken(token);
+
+      if (decodedToken) {
+        callback(req, res, decodedToken);
+      } else {
+        console.error("Error authMiddleare - decodedToken invalid");
+        res.status(401).json({ message: "token invalid" });
+      }
     }
   };
 }
