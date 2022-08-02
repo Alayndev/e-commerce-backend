@@ -1,6 +1,10 @@
 // yup dwf-m9
 import { Order } from "models/order";
-import { createPreferenceMP } from "lib/connections/mercadopago";
+import {
+  createPreferenceMP,
+  getMerchantOrder,
+} from "lib/connections/mercadopago";
+import { sendEmail } from "lib/connections/sendgrid";
 
 type CreateOrderRes = {
   url: string;
@@ -29,7 +33,7 @@ export async function createOrder(
 
   // ! 1) Generamos orden de compra en nuestra DB - Firestore (20 - 22)
   // TODO: (min. 21) Controller que verifique que un mismo user NO compre dos veces el mismo producto, where(). Pero estaría mal? O abría que avisarle solamente? Puede comprar 2 veces el mismo producto
-  // Quien compra (userId) - Que compra (productId) - Datos adicionales de la compra 
+  // Quien compra (userId) - Que compra (productId) - Datos adicionales de la compra
   const now = new Date();
 
   const newOrderObj = {
@@ -83,4 +87,39 @@ export async function getOrderById(orderId: string): Promise<any> {
   const orderData = await Order.getOrder(orderId);
 
   return orderData;
+}
+
+export async function updateOrder(topic: string, id): Promise<any> {
+  if (topic == "merchant_order") {
+    const order = await getMerchantOrder(id);
+
+    if (order.body.order_status === "paid") {
+      const orderId = order.body.external_reference;
+
+      const myOrder = new Order(orderId);
+      await myOrder.pullOrder();
+
+      myOrder.data.status = "paid";
+      myOrder.data.gatewayOrder = order.body;
+      const now = new Date();
+      myOrder.data.updatedAt = now;
+
+      await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
+
+      // Todo: Mandar email a quien compró
+      // sendEmail("pepe@gmail", 200);
+      // sendEmailInterno("Alguien compró algo, hay que procesar el pedido y hacer algo en efecto");
+
+      // IMPORTANTE (min. 18 Teoria): Siempre hay que responde status 200 o 201, sino MP le sigue pegando a notification_url hasta obtene respuesta porque NO sabe si la URL fue notificada
+      // https://www.mercadopago.com.ar/developers/es/docs/notifications/ipn
+      return { order_status: order.body.order_status, order };
+    } else {
+      console.log("order_status: ", order.body.order_status); // ! DUDA: Aca lo mismo, cual sería el else {} de este if {}. Porque "paid" creo que es solamente cuando el pago es efectivo con APRO
+      throw "Product has not been paid";
+    }
+  } else {
+    console.log("topic: ", topic, "no merchant_order as topic");
+
+    throw "No merchant_order as topic";
+  }
 }

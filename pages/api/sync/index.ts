@@ -5,7 +5,7 @@ import { base } from "lib/connections/airtable";
 import { productsIndex } from "lib/connections/algolia";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  base("Furniture")
+  base("Products")
     .select({
       pageSize: 5, // Traigo 5 records por página/ejecusión de la función hasta que se terminen los records ya que utlizo fetchNextPage();. La dif con maxRecords es que si hago maxRecords: 5, me trae 5 y listo. Mientras que con pageSize me trae de a 5 hasta que se termine la lista al utilizar fetchNextPage(); y pedir nuevamente 5 (con maxRecords NO funciona fetchNextPage();). Entonces eachPage() será del tamaño de pageSize
     })
