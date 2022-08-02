@@ -24,3 +24,26 @@ export async function sendEmail(user: string, code: number) {
 
   return sentEmail;
 }
+
+export async function sendPaymentConfirmation(user: string) {
+  const msg = {
+    to: user, // Change to your recipient
+    from: "saezalayn@gmail.com", // Change to your verified sender
+    subject: `El pago ha sido exitoso.`,
+    text: `Todo salió bien! Que disfrutes tu compra!`,
+  };
+
+  const sentEmail = await sgMail
+    .send(msg)
+    .then(() => {
+      console.log(`Email sent to: ${user}`);
+      const sendgridEmail = `Email sent to: ${user}`;
+      return { sendgridEmail };
+    })
+    .catch((error) => {
+      console.error(error);
+      return { error };
+    });
+
+  return sentEmail;
+}

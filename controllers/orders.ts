@@ -1,10 +1,11 @@
 // yup dwf-m9
 import { Order } from "models/order";
+import { User } from "models/user";
 import {
   createPreferenceMP,
   getMerchantOrder,
 } from "lib/connections/mercadopago";
-import { sendEmail } from "lib/connections/sendgrid";
+import { sendPaymentConfirmation } from "lib/connections/sendgrid";
 
 type CreateOrderRes = {
   url: string;
@@ -106,12 +107,11 @@ export async function updateOrder(topic: string, id): Promise<any> {
 
       await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
 
-      // Todo: Mandar email a quien compró
-      // sendEmail("pepe@gmail", 200);
+      const userRef = new User(myOrder.data.userId);
+      await userRef.pullUser();
+      sendPaymentConfirmation(userRef.data.email);
       // sendEmailInterno("Alguien compró algo, hay que procesar el pedido y hacer algo en efecto");
 
-      // IMPORTANTE (min. 18 Teoria): Siempre hay que responde status 200 o 201, sino MP le sigue pegando a notification_url hasta obtene respuesta porque NO sabe si la URL fue notificada
-      // https://www.mercadopago.com.ar/developers/es/docs/notifications/ipn
       return { order_status: order.body.order_status, order };
     } else {
       console.log("order_status: ", order.body.order_status); // ! DUDA: Aca lo mismo, cual sería el else {} de este if {}. Porque "paid" creo que es solamente cuando el pago es efectivo con APRO
