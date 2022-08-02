@@ -4,8 +4,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { base } from "lib/connections/airtable";
 import { productsIndex } from "lib/connections/algolia";
 
-// Cron: (Desafio Min. 19:30) Vercel NO tiene un servicio de cron incorporado, por lo que tenemos que usar un servicio de cron externo.
-// Cron Job: (Desafio Min. 25) Cron Job es un servicio de cron que nos permite darle una URL que la ejecuta cada X cant. de tiempo. Muy simple, ver screen.
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   base("Furniture")
     .select({
@@ -13,7 +11,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     })
     .eachPage(
       async function page(records, fetchNextPage) {
-        // Algolia: (min. 20 - 3er video teoria) Guardamos estos records en Algolia
+        // Algolia: Guardamos estos records en Algolia
         const objects = records.map((r) => {
           return {
             objectID: r.id,
@@ -23,9 +21,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
         await productsIndex.saveObjects(objects);
 
-        console.log(objects, "objects");
+        // console.log(objects, "objects");
 
-        console.log("Página");
+        // console.log("Página");
 
         fetchNextPage();
       },
@@ -35,7 +33,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
           return;
         }
 
-        console.log("Terminó");
+        // console.log("Terminó");
 
         res.status(200).json({ message: "Sync completed", ok: true });
       }

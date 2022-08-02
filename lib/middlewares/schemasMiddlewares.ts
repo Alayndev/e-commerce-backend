@@ -7,7 +7,7 @@ export function validateQuery(schema, callback) {
 
       callback(req, res);
     } catch (error) {
-      res.status(400).json({ message: error });
+      res.status(400).json({ message: error, field: "query" });
     }
   };
 }
@@ -19,7 +19,7 @@ export function validateBody(schema, callback) {
 
       callback(req, res);
     } catch (error) {
-      res.status(400).json({ message: error });
+      res.status(400).json({ message: error, field: "body" });
     }
   };
 }

@@ -9,21 +9,19 @@ import {
 } from "lib/middlewares/schemasMiddlewares";
 
 // Yup: Definimos los schemas para validar query/body. Primero que nada validamos que query/body tengan los datos/campos requeridos con los tipos requeridos. De no ser así, cortamos el flujo
-let querySchema = yup.object().shape({
-  productId: yup.string().required("productId required by query"), // El mensaje que se va a mostrar en errors
-});
-
 // Con .noUnknown(true).strict(); NO permitimos otros datos/campos
-let bodySchema = yup
+let querySchema = yup
   .object()
   .shape({
-    color: yup.string().required("color required by body"),
-    shipping_address: yup
-      .string()
-      .required("shipping_address required by body"),
+    productId: yup.string().required("productId required by query"), // El mensaje que se va a mostrar en errors
   })
   .noUnknown(true)
   .strict();
+
+let bodySchema = yup.object().shape({
+  color: yup.string(),
+  shipping_address: yup.string().required("shipping_address required by body"),
+});
 
 // POST /order?productId={id}:  Este un endpoint seguro, chequea el token y recupera la data del user de la db. Recibe por query param el id del producto a comprar (productId) y adicionalmente toda la data extra sobre esta compra en el body. Por ejemplo: detalles del envío, modificaciones sobre el producto como tamaño, color etc. Genera la orden en nuestra base de datos (un registro en la collection orders) y a continuación la preferencia en MercadoPago. Para poder reconocer esta orden más adelante vamos a utilizar el campo external_reference para indicarle el id de la orden de nuestra DB. Además vamos a setear la URL de nuestro hook en el campo notification_url. Este endpoint debe responder con la URL a donde debemos redirigir al user.
 async function createPreference(

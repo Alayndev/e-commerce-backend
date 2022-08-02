@@ -11,8 +11,6 @@ export function authMiddleware(callback) {
 
     const decodedToken = decodeToken(token);
 
-    console.log(token, "token", decodedToken, "decodedToken");
-
     if (decodedToken) {
       callback(req, res, decodedToken);
     } else {
