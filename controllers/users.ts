@@ -11,15 +11,11 @@ export async function getUserById(id: string): Promise<any> {
 export async function patchUserById(id: string, newData: any): Promise<any> {
   const userRef = new User(id);
 
-  await userRef.pullUser();
-
   userRef.data = newData;
 
   await userRef.pushUser();
 
-  await userRef.pullUser();
-
-  return userRef.data;
+  return { userUpdated: true };
 }
 
 export async function patchUserAddressById(

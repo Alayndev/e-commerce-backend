@@ -29,10 +29,10 @@ async function patchHandler(
 ) {
   try {
     await bodySchema.validate(req.body);
-    
+
     const user = await patchUserById(userData.userId, req.body); // ( MVC Desafio Modulo ) Capa View invoca capa Controllers
 
-    res.send({ user });
+    res.send(user);
   } catch (error) {
     res.status(400).json({ message: error, field: "body" });
   }

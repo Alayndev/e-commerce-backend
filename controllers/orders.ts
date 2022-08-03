@@ -115,11 +115,8 @@ export async function updateOrder(topic: string, id): Promise<any> {
       return { order_status: order.body.order_status, order };
     } else {
       console.log("order_status: ", order.body.order_status); // ! DUDA: Aca lo mismo, cual sería el else {} de este if {}. Porque "paid" creo que es solamente cuando el pago es efectivo con APRO
-      throw "Product has not been paid";
     }
   } else {
     console.log("topic: ", topic, "no merchant_order as topic");
-
-    throw "No merchant_order as topic";
   }
 }
