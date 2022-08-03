@@ -2,7 +2,6 @@ import { firestore } from "lib/connections/firestore";
 
 const collection = firestore.collection("orders");
 
-// Min. 28 - Sería ideal tipar con este type createPreference() - data - y demás props. y methods tambien
 type OrderData = {
   additionalInfo: any;
   productId: string;

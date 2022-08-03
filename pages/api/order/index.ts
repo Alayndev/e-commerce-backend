@@ -34,7 +34,6 @@ async function createPreference(
   try {
     const { url } = await createOrder(userData.userId, productId, req.body);
 
-    // Este endpoint debe responder con la URL a donde debemos redirigir al user.
     res.status(200).json({ url });
   } catch (error) {
     res.status(400).json({ message: error });
@@ -45,8 +44,6 @@ const handler = methods({
   post: createPreference,
 });
 
-// Asi se ponen 3 middlewares con los parametros para c/u
-// ! Primero que nada validamos que query/body tengan los datos/campos requeridos con los tipos requeridos. De no ser así, cortamos el flujo
 export default validateQuery(
   querySchema,
   validateBody(bodySchema, authMiddleware(handler))

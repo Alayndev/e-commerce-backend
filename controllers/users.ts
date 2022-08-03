@@ -1,11 +1,11 @@
-import { User } from "models/user"; // Capa controllers invoca a capa Model
+import { User } from "models/user"; 
 
 export async function getUserById(id: string): Promise<any> {
   const userRef = new User(id);
 
   await userRef.pullUser();
 
-  return userRef.data; // (MVC Desafio Modulo) Podemos devolver una instancia o la data directamente. Mejor la data.
+  return userRef.data; 
 }
 
 export async function patchUserById(id: string, newData: any): Promise<any> {

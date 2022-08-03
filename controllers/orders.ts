@@ -1,4 +1,3 @@
-// yup dwf-m9
 import { Order } from "models/order";
 import { User } from "models/user";
 import {
@@ -12,7 +11,6 @@ type CreateOrderRes = {
   url: string;
 };
 
-// Controller con parametros de entrada y de salida tipados
 export async function createOrder(
   userId: string,
   productId: string,
@@ -58,7 +56,7 @@ export async function createOrder(
       failure: "https://apx.school/blog",
     },
     external_reference: newOrder.id,
-    notification_url: "https://pagos-mp.vercel.app/api/webhooks/mercadopago", // Tras hacer deploy con Vercel, ponemos este Endpoint para que le pegue MP.     // IMPORTANTE: (min. 12:30 Teoria Intencio de compra) notification_url: Es el endpoint de nuestra API al cual la API de MercadoPago le va a pegar para informarle que algo paso con la preferencia/intencion de compra creada. Nomenclaturas convencionales de este endpoint: POST /ipn - POST /webhooks/mercadopago
+    notification_url: "https://pagos-mp.vercel.app/api/webhooks/mercadopago", 
   };
 
   const pref = await createPreferenceMP(preferenceData);
@@ -103,7 +101,7 @@ export async function updateOrder(topic: string, id): Promise<any> {
 
       return { order_status: order.body.order_status, order };
     } else {
-      console.log("order_status: ", order.body.order_status); // ! DUDA: Aca lo mismo, cual sería el else {} de este if {}. Porque "paid" creo que es solamente cuando el pago es efectivo con APRO
+      console.log("order_status: ", order.body.order_status); 
     }
   } else {
     console.log("topic: ", topic, "no merchant_order as topic");
