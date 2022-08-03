@@ -5,6 +5,7 @@ import {
   createPreferenceMP,
   getMerchantOrder,
 } from "lib/connections/mercadopago";
+import { getProductByID } from "./products";
 import { sendPaymentConfirmation } from "lib/connections/sendgrid";
 
 type CreateOrderRes = {
@@ -26,14 +27,13 @@ export async function createOrder(
   productId: string,
   additionalInfo
 ): Promise<CreateOrderRes> {
-  const product = products[productId]; // Simula buscar el producto en la coll products de Firestore
+  const product = await getProductByID(productId);
 
-  if (!product) {
-    throw "Product not found";
+  if (product.error) {
+    throw `Product not found. ${product.error}`;
   }
 
-  // ! 1) Generamos orden de compra en nuestra DB - Firestore (20 - 22)
-  // TODO: (min. 21) Controller que verifique que un mismo user NO compre dos veces el mismo producto, where(). Pero estaría mal? O abría que avisarle solamente? Puede comprar 2 veces el mismo producto
+  // 1) Generamos orden de compra en nuestra DB - Firestore
   // Quien compra (userId) - Que compra (productId) - Datos adicionales de la compra
   const now = new Date();
 
@@ -42,16 +42,13 @@ export async function createOrder(
     productId,
     userId,
     createdAt: now,
-    status: "pending", // (min. 30) Al crear la order esta está en status pending así el user puede ver que products tiene por pagar, o podemos desde el e-commerce recorrer las ordenes de un user y mandarle un email de que le quedo este product por pagar/en el carrito
+    status: "pending",
   };
 
   const newOrder = await Order.createNewOrder(newOrderObj);
-  console.log(
-    newOrder.id,
-    "para seguir local o Vercel Functions y ver si se actualiza"
-  );
+  console.log(newOrder.id, "newOrder.id - doc id");
 
-  // ! 2) Generar preferencia en MP (min. 22 - 27) (ver createPreferenceMP())
+  // 2) Generar preferencia en MP (min. 22 - 27) (ver createPreferenceMP())
   const preferenceData = {
     items: [
       {
@@ -105,12 +102,13 @@ export async function updateOrder(topic: string, id): Promise<any> {
       const now = new Date();
       myOrder.data.updatedAt = now;
 
-      await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
-
+      // Todo: En local se envia el mail, en prod NO
       const userRef = new User(myOrder.data.userId);
       await userRef.pullUser();
       sendPaymentConfirmation(userRef.data.email);
       // sendEmailInterno("Alguien compró algo, hay que procesar el pedido y hacer algo en efecto");
+
+      await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
 
       return { order_status: order.body.order_status, order };
     } else {

@@ -33,7 +33,7 @@ class Order {
 
   static async createNewOrder(data) {
     const newOrderSnap = await collection.add(data);
-    console.log(newOrderSnap, "newOrderSnap Order");
+    // console.log(newOrderSnap, "newOrderSnap Order");
 
     const newOrder = new Order(newOrderSnap.id);
 

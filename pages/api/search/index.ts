@@ -16,6 +16,7 @@ let querySchema = yup
   .noUnknown(true)
   .strict();
 
+// Todo: MVC
 // Algolia Pagination: https://www.algolia.com/doc/api-reference/api-parameters/page/ || https://www.algolia.com/doc/guides/building-search-ui/ui-and-ux-patterns/pagination/js/#pagination-at-indexing-time
 // Endpoint para buscar products en Algolia
 async function searchProducts(req: NextApiRequest, res: NextApiResponse) {
