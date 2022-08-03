@@ -12,15 +12,6 @@ type CreateOrderRes = {
   url: string;
 };
 
-// TODO: Hacerlo posta para subirlo a GitHub
-// Simula la coll products de Firestore
-const products = {
-  1234: {
-    title: "Mate de APX",
-    price: 230,
-  },
-};
-
 // Controller con parametros de entrada y de salida tipados
 export async function createOrder(
   userId: string,

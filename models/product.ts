@@ -19,6 +19,34 @@ class Product {
       return { error: error.message };
     }
   }
+
+  static async getProducts(wordToSearch: string, finalOffset: number, finalLimit: number) {
+    try {
+      const results = await productsIndex.search(wordToSearch, {
+        offset: finalOffset, 
+    
+        length: finalLimit, 
+      });
+
+      return results;
+    } catch (error) {
+      //   console.log(error, "error");
+
+      return { error: error.message };
+    }
+  }
+
+  static async countAllProducts() {
+    try {
+      const results = await productsIndex.search("");
+
+      return results;
+    } catch (error) {
+      //   console.log(error, "error");
+
+      return { error: error.message };
+    }
+  }
 }
 
 export { Product };
