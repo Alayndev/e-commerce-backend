@@ -6,8 +6,8 @@ export async function getProductByID(productId: string): Promise<any> {
   return res;
 }
 
-export async function getProductsTotal(): Promise<any> {
-  const res = Product.countAllProducts()
+export async function getProductsTotal(wordToSearch: string): Promise<any> {
+  const res = Product.countAllProducts(wordToSearch)
 
   return res;
 }

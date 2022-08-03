@@ -36,9 +36,9 @@ class Product {
     }
   }
 
-  static async countAllProducts() {
+  static async countAllProducts(wordToSearch: string) {
     try {
-      const results = await productsIndex.search("");
+      const results = await productsIndex.search(wordToSearch);
 
       return results;
     } catch (error) {

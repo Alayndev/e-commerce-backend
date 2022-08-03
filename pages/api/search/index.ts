@@ -19,16 +19,16 @@ let querySchema = yup
 // GET /search?q=query&offset=0&limit=10: Endpoint para buscar products en Algolia. Buscar productos en nuestra base de datos. Chequea stock y todo lo necesario.
 async function searchProducts(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const { nbHits } = await getProductsTotal();
+    const wordToSearch: string = req.query.q as string;
+    const { nbHits } = await getProductsTotal(wordToSearch);
 
     const { finalLimit, finalOffset } = getLimitAndOffset(req, 10, nbHits);
 
-    const wordToSearch: string = req.query.q as string;
-    
     const results = await getProducts(wordToSearch, finalOffset, finalLimit);
 
     res.status(200).json({
       results: results.hits,
+      resultsTotal: results.hits.length,
 
       pagination: {
         offset: finalOffset,
