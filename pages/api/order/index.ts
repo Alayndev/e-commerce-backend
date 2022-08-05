@@ -32,9 +32,9 @@ async function createPreference(
   const { productId } = req.query as any;
 
   try {
-    const { url } = await createOrder(userData.userId, productId, req.body);
+    const { url, orderId } = await createOrder(userData.userId, productId, req.body);
 
-    res.status(200).json({ url });
+    res.status(200).json({ url, orderId });
   } catch (error) {
     res.status(400).json({ message: error });
   }

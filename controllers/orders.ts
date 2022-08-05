@@ -10,6 +10,7 @@ import { sendPaymentConfirmation } from "lib/connections/sendgrid";
 
 type CreateOrderRes = {
   url: string;
+  orderId: string;
 };
 
 export async function createOrder(
@@ -67,7 +68,7 @@ export async function createOrder(
 
   const pref = await createPreferenceMP(preferenceData);
 
-  return { url: pref.body.init_point };
+  return { url: pref.body.init_point, orderId: newOrder.id };
 }
 
 export async function getUserOrdersById(id: string): Promise<any> {
