@@ -16,8 +16,7 @@ class Product {
       return res;
     } catch (error) {
       //   console.log(error, "error");
-
-      return { error: error.message };
+      throw `Invalid query. ProductId / ${error.message}`;
     }
   }
 

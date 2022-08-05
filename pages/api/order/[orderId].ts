@@ -16,12 +16,12 @@ let querySchema = yup
 // GET /order/{orderId}: Devuelve una orden con toda la data incluyendo el estado de la orden.
 async function getHandler(req: NextApiRequest, res: NextApiResponse) {
   const { orderId }: any = req.query;
-  const orderData = await getOrderById(orderId);
-
-  if (orderData.error) {
-    res.status(400).send({ orderData });
-  } else {
+  
+  try {
+    const orderData = await getOrderById(orderId);
     res.send({ orderData });
+  } catch (error) {
+    res.status(400).send({ error });
   }
 }
 

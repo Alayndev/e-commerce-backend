@@ -63,8 +63,7 @@ class Order {
 
       return orderData;
     } else {
-      const message = `This orderId does not exist: ${orderId}`;
-      return { error: message };
+      throw `This orderId does not exist: ${orderId}`;
     }
   }
 }

@@ -16,12 +16,12 @@ let querySchema = yup
 // GET /products/{id}: Obtiene toda data de un producto.
 async function getHandler(req: NextApiRequest, res: NextApiResponse, userData) {
   const { productId }: any = req.query;
-  const productData = await getProductByID(productId);
 
-  if (productData.error) {
-    res.status(400).send({ productData });
-  } else {
+  try {
+    const productData = await getProductByID(productId);
     res.send({ productData });
+  } catch (error) {
+    res.status(400).send({ error });
   }
 }
 
