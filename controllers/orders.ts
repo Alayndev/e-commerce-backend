@@ -17,9 +17,14 @@ export async function createOrder(
   additionalInfo
 ): Promise<CreateOrderRes> {
   const product = await getProductByID(productId);
+  console.log("🚀 ~ file: orders.ts ~ line 20 ~ product", product);
 
   if (product.error) {
     throw `Product not found. ${product.error}`;
+  }
+
+  if (!product.stock) {
+    throw `Out of stock.`;
   }
 
   // 1) Generamos orden de compra en nuestra DB - Firestore
@@ -56,7 +61,7 @@ export async function createOrder(
       failure: "https://apx.school/blog",
     },
     external_reference: newOrder.id,
-    notification_url: "https://pagos-mp.vercel.app/api/webhooks/mercadopago", 
+    notification_url: "https://pagos-mp.vercel.app/api/webhooks/mercadopago",
   };
 
   const pref = await createPreferenceMP(preferenceData);
@@ -91,17 +96,16 @@ export async function updateOrder(topic: string, id): Promise<any> {
       const now = new Date();
       myOrder.data.updatedAt = now;
 
-      // Todo: En local se envia el mail, en prod NO
       const userRef = new User(myOrder.data.userId);
       await userRef.pullUser();
-      sendPaymentConfirmation(userRef.data.email);
+      await sendPaymentConfirmation(userRef.data.email);
       // sendEmailInterno("Alguien compró algo, hay que procesar el pedido y hacer algo en efecto");
 
       await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
 
       return { order_status: order.body.order_status, order };
     } else {
-      console.log("order_status: ", order.body.order_status); 
+      console.log("order_status: ", order.body.order_status);
     }
   } else {
     console.log("topic: ", topic, "no merchant_order as topic");
