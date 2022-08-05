@@ -1,5 +1,6 @@
 import { Order } from "models/order";
 import { User } from "models/user";
+import { Product } from "models/product";
 import {
   createPreferenceMP,
   getMerchantOrder,
@@ -99,7 +100,8 @@ export async function updateOrder(topic: string, id): Promise<any> {
       const userRef = new User(myOrder.data.userId);
       await userRef.pullUser();
       await sendPaymentConfirmation(userRef.data.email);
-      // sendEmailInterno("Alguien compró algo, hay que procesar el pedido y hacer algo en efecto");
+
+      await Product.updateProductByID(myOrder.data.productId); // Actualizo Airtable, totalUnitsSold
 
       await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
 

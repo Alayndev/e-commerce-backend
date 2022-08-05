@@ -1,4 +1,5 @@
 import { productsIndex } from "lib/connections/algolia";
+import { base } from "lib/connections/airtable";
 
 class Product {
   id: string;
@@ -20,12 +21,35 @@ class Product {
     }
   }
 
-  static async getProducts(wordToSearch: string, finalOffset: number, finalLimit: number) {
+  static async updateProductByID(producId: string) {
+    try {
+      base("Products").find(producId, async function (err, record: any) {
+        if (err) {
+          console.error(err);
+          throw `${err}`;
+        }
+
+        await record.patchUpdate({
+          totalUnitsSold: record.fields.totalUnitsSold + 1,
+        });
+      });
+    } catch (error) {
+      //   console.log(error, "error");
+
+      return { error: error.message };
+    }
+  }
+
+  static async getProducts(
+    wordToSearch: string,
+    finalOffset: number,
+    finalLimit: number
+  ) {
     try {
       const results = await productsIndex.search(wordToSearch, {
-        offset: finalOffset, 
-    
-        length: finalLimit, 
+        offset: finalOffset,
+
+        length: finalLimit,
       });
 
       return results;
