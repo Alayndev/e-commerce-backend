@@ -63,7 +63,7 @@ export async function createOrder(
       failure: "https://apx.school/blog",
     },
     external_reference: newOrder.id,
-    notification_url: "https://pagos-mp.vercel.app/api/webhooks/mercadopago",
+    notification_url: "https://e-commerce-backend-smoky.vercel.app/api/webhooks/mercadopago",
   };
 
   const pref = await createPreferenceMP(preferenceData);
