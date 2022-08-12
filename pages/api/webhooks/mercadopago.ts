@@ -6,9 +6,11 @@ async function getOrder(req: NextApiRequest, res: NextApiResponse) {
   const { id, topic }: any = req.query;
 
   try {
-    const res = await updateOrder(topic, id);
+    if (topic == "merchant_order") {
+      const res = await updateOrder(topic, id);
 
-    res.status(200).send(res);
+      res.status(200).send(res);
+    }
   } catch (error) {
     // Siempre res 200 con MP
     res.status(200).send({ error });

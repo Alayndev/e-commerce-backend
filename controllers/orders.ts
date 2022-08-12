@@ -84,35 +84,31 @@ export async function getOrderById(orderId: string): Promise<any> {
 }
 
 export async function updateOrder(topic: string, id): Promise<any> {
-  if (topic == "merchant_order") {
-    const order = await getMerchantOrder(id);
+  const order = await getMerchantOrder(id);
 
-    if (order.body.order_status === "paid") {
-      const orderId = order.body.external_reference;
+  if (order.body.order_status == "paid") {
+    const orderId = order.body.external_reference;
 
-      const myOrder = new Order(orderId);
-      await myOrder.pullOrder();
+    const myOrder = new Order(orderId);
+    await myOrder.pullOrder();
 
-      myOrder.data.status = "paid";
-      myOrder.data.gatewayOrder = order.body;
-      const now = new Date();
-      myOrder.data.updatedAt = now;
+    myOrder.data.status = "paid";
+    myOrder.data.gatewayOrder = order.body;
+    const now = new Date();
+    myOrder.data.updatedAt = now;
 
-      const userRef = new User(myOrder.data.userId);
-      await userRef.pullUser();
-      console.log(userRef.data.email, "user email");
-      
-      await sendPaymentConfirmation(userRef.data.email);
+    const userRef = new User(myOrder.data.userId);
+    await userRef.pullUser();
+    console.log(userRef.data.email, "user email");
 
-      await Product.updateProductByID(myOrder.data.productId); // Actualizo Airtable, totalUnitsSold
+    await sendPaymentConfirmation(userRef.data.email);
 
-      await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
+    await Product.updateProductByID(myOrder.data.productId); // Actualizo Airtable, totalUnitsSold
 
-      return { order_status: order.body.order_status, order };
-    } else {
-      console.log("order_status: ", order.body.order_status);
-    }
+    await myOrder.pushOrder(); // Actualizamos el estado/status de la orden
+
+    return { order_status: order.body.order_status, order };
   } else {
-    console.log("topic: ", topic, "no merchant_order as topic");
+    console.log("order_status: ", order.body.order_status);
   }
 }
