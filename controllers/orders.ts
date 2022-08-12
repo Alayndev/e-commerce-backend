@@ -100,6 +100,8 @@ export async function updateOrder(topic: string, id): Promise<any> {
 
       const userRef = new User(myOrder.data.userId);
       await userRef.pullUser();
+      console.log(userRef.data.email, "user email");
+      
       await sendPaymentConfirmation(userRef.data.email);
 
       await Product.updateProductByID(myOrder.data.productId); // Actualizo Airtable, totalUnitsSold

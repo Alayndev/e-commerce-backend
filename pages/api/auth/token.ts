@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { generateToken } from "lib/connections/jwt";
 import methods from "micro-method-router";
-import { findByEmailAndCode } from "controllers/auth";
+import {
+  findByEmailAndCode,
+  checkCodeExpirationAndCreateToken,
+} from "controllers/auth";
 import * as yup from "yup";
 import { validateBody } from "lib/middlewares/schemasMiddlewares";
 
@@ -19,14 +21,9 @@ async function createToken(req: NextApiRequest, res: NextApiResponse) {
   try {
     const auth = await findByEmailAndCode(req.body.email, req.body.code);
 
-    const expires = auth.isCodeExpired();
+    const response = await checkCodeExpirationAndCreateToken(auth);
 
-    if (expires) {
-      res.status(401).json({ message: "Code expired" });
-    } else {
-      const token = generateToken({ userId: auth.data.userId });
-      res.send({ token });
-    }
+    res.send(response);
   } catch (error) {
     res.status(400).send({ error });
   }

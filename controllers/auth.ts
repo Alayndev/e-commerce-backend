@@ -1,6 +1,6 @@
 import { Auth } from "models/auth";
 import { User } from "models/user";
-
+import { generateToken } from "lib/connections/jwt";
 import addMinutes from "date-fns/addMinutes";
 import gen from "random-seed";
 import { sendEmail } from "lib/connections/sendgrid";
@@ -58,4 +58,20 @@ export async function findByEmailAndCode(email: string, code: number) {
   const userFound = Auth.findByEmailAndCode(email, code);
 
   return userFound;
+}
+
+export async function checkCodeExpirationAndCreateToken(auth: Auth) {
+  const expires = auth.isCodeExpired();
+
+  if (expires) {
+    throw `Code expired`;
+  } else {
+    const token = generateToken({ userId: auth.data.userId });
+
+    // Invalidate code
+    auth.data.expires = new Date();
+    await auth.pushAuth();
+
+    return { token };
+  }
 }
