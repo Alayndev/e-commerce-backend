@@ -101,7 +101,15 @@ export async function updateOrder(topic: string, id): Promise<any> {
     await userRef.pullUser();
     console.log(userRef.data.email, "user email");
 
-    await sendPaymentConfirmation(userRef.data.email);
+    try {
+      const responseEmail = await sendPaymentConfirmation(userRef.data.email);
+      console.log(
+        "🚀 ~ file: orders.ts ~ line 106 ~ updateOrder ~ responseEmail",
+        responseEmail
+      );
+    } catch (error) {
+      console.error(error);
+    }
 
     await Product.updateProductByID(myOrder.data.productId); // Actualizo Airtable, totalUnitsSold
 
