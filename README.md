@@ -11,8 +11,8 @@ Controller: Controllers are in charge of the business logic of the application, 
 <br/>
 
 
-## Postman Documentation
-https://documenter.getpostman.com/view/17990146/VUjLKRpq
+## Postman Collection:
+[E-commerce - API REST Docs](https://documenter.getpostman.com/view/17990146/VUjLKRpq)
 
 <br/>
 
